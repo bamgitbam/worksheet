@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#111827" />
+  <title>Solo Productivity Pilot</title>
+  <link rel="stylesheet" href="app.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">SOLO PILOT</p>
+        <h1 id="screenTitle">Today</h1>
+      </div>
+      <button class="icon-btn" id="exportBtn" title="Export backup" aria-label="Export backup">⇩</button>
+    </header>
+
+    <main>
+      <section class="screen active" data-screen="today">
+        <div class="hero card">
+          <div class="hero-row">
+            <div>
+              <p class="muted" id="todayDate"></p>
+              <h2 id="greeting">Today's Run</h2>
+            </div>
+            <div class="status-pill" id="dayStatus">READY</div>
+          </div>
+
+          <div class="progress-wrap">
+            <div class="progress-label"><span>Mission progress</span><strong id="missionPercent">0%</strong></div>
+            <div class="progress-track"><div class="progress-bar" id="missionBar"></div></div>
+          </div>
+
+          <div class="metric-grid">
+            <div><span>Target</span><strong>7h</strong></div>
+            <div><span>Elapsed</span><strong id="elapsedTime">0h 00m</strong></div>
+            <div><span>Focus resets</span><strong id="focusCount">0</strong></div>
+            <div><span>XP</span><strong id="todayXp">0</strong></div>
+          </div>
+
+          <div class="mission-preview">
+            <p class="label">MAIN MISSION</p>
+            <h3 id="mainMissionText">Set today's mission</h3>
+            <p id="nextMoveText" class="muted">Add a few clear tasks so the day has a finish line.</p>
+          </div>
+
+          <div class="button-row">
+            <button class="primary" id="startDayBtn">Start Day</button>
+            <button class="secondary" id="finishShortcutBtn">Finish Day</button>
+          </div>
+        </div>
+
+        <button class="focus-button" id="focusResetBtn">
+          <span class="focus-main">BACK TO WORK</span>
+          <span class="focus-sub">Catch the distraction. Reset the run.</span>
+        </button>
+
+        <div class="card">
+          <div class="section-head"><h3>Today's Tasks</h3><span id="taskSummary" class="muted">0 / 0</span></div>
+          <div id="todayTasks" class="task-list empty-state">No tasks yet.</div>
+        </div>
+
+        <div class="card compact-grid">
+          <div><span class="label">Momentum</span><strong id="momentumLabel">Ready</strong></div>
+          <div><span class="label">Craft</span><strong id="craftLabel">Unrated</strong></div>
+          <div><span class="label">Stewardship</span><strong id="stewardshipLabel">Unrated</strong></div>
+          <div><span class="label">Focus</span><strong id="focusLabel">Fresh start</strong></div>
+        </div>
+      </section>
+
+      <section class="screen" data-screen="mission">
+        <div class="card">
+          <p class="muted">One minute in the morning. Give the day a clear finish line.</p>
+          <label>Main mission<input id="mainMissionInput" maxlength="120" placeholder="Example: Prep and first coat west elevation" /></label>
+          <label>Stretch goal<input id="stretchGoalInput" maxlength="120" placeholder="Optional: Begin south elevation" /></label>
+          <label>Difficulty
+            <select id="difficultyInput">
+              <option value="normal">Normal</option>
+              <option value="easy">Easy</option>
+              <option value="hard">Hard</option>
+              <option value="unknown">Unknown</option>
+            </select>
+          </label>
+          <button class="primary full" id="saveMissionBtn">Save Mission</button>
+        </div>
+
+        <div class="card">
+          <div class="section-head"><h3>Task list</h3><button class="text-btn" id="clearCompletedBtn">Clear done</button></div>
+          <form id="taskForm" class="inline-form">
+            <input id="taskInput" maxlength="90" placeholder="Add a concrete task" required />
+            <button class="secondary" type="submit">Add</button>
+          </form>
+          <div id="missionTasks" class="task-list empty-state">No tasks yet.</div>
+        </div>
+      </section>
+
+      <section class="screen" data-screen="materials">
+        <div class="card">
+          <p class="muted">Track awareness, not perfection. Reward correct use and low avoidable waste.</p>
+          <form id="materialForm" class="material-form">
+            <label>Material<input id="materialName" placeholder="Paint, caulk, lumber…" required /></label>
+            <div class="two-col">
+              <label>Starting<input id="materialStart" type="number" min="0" step="0.1" placeholder="8" /></label>
+              <label>Remaining<input id="materialRemaining" type="number" min="0" step="0.1" placeholder="1.5" /></label>
+            </div>
+            <label>Unit<input id="materialUnit" placeholder="gal, tubes, pieces" /></label>
+            <label>Waste
+              <select id="materialWaste">
+                <option value="none">None</option>
+                <option value="minor">Minor</option>
+                <option value="significant">Significant</option>
+              </select>
+            </label>
+            <button class="primary full" type="submit">Add Material Check</button>
+          </form>
+        </div>
+        <div id="materialList" class="stack"></div>
+      </section>
+
+      <section class="screen" data-screen="finish">
+        <div class="card">
+          <h3>Finish the run</h3>
+          <p class="muted">Two minutes. Capture the day honestly.</p>
+
+          <label>Quality / rework
+            <select id="qualityInput">
+              <option value="clean">No known rework</option>
+              <option value="minor">Minor correction needed</option>
+              <option value="major">Significant rework needed</option>
+            </select>
+          </label>
+
+          <label>How did I perform?
+            <select id="performanceInput">
+              <option value="better">Better than normal</option>
+              <option value="normal" selected>Normal</option>
+              <option value="below">Below my normal ability</option>
+            </select>
+          </label>
+
+          <label>How did work feel?
+            <select id="feelingInput">
+              <option value="energizing">Energizing</option>
+              <option value="good">Good</option>
+              <option value="neutral" selected>Neutral</option>
+              <option value="frustrating">Frustrating</option>
+              <option value="exhausting">Exhausting</option>
+            </select>
+          </label>
+
+          <label>What slowed me down?<textarea id="blockersInput" rows="3" placeholder="Unexpected repair, waiting for access, setup, weather…"></textarea></label>
+          <label>Notes<textarea id="notesInput" rows="3" placeholder="What changed my pace or focus today?"></textarea></label>
+
+          <div class="score-preview" id="scorePreview"></div>
+          <button class="primary full" id="finishDayBtn">Finish Run</button>
+        </div>
+      </section>
+
+      <section class="screen" data-screen="week">
+        <div class="card">
+          <p class="eyebrow">JUL 21–24 · 7 HOURS / DAY</p>
+          <h2>My Week</h2>
+          <div class="metric-grid week-grid">
+            <div><span>Days finished</span><strong id="weekDays">0 / 4</strong></div>
+            <div><span>Mission completion</span><strong id="weekCompletion">0%</strong></div>
+            <div><span>Focus resets</span><strong id="weekFocus">0</strong></div>
+            <div><span>Total XP</span><strong id="weekXp">0</strong></div>
+          </div>
+        </div>
+        <div id="weekDaysList" class="stack"></div>
+        <div class="card">
+          <h3>Friday review</h3>
+          <p class="muted">The pilot succeeds only if it creates personal value.</p>
+          <div class="review-prompts">
+            <p>Did having a visible mission change my pace?</p>
+            <p>Did the Back to Work reset reduce lost phone time?</p>
+            <p>Did I notice material use differently?</p>
+            <p>Did I feel more engaged—or just more tracked?</p>
+            <p>Would I voluntarily use this again next week?</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <nav class="bottom-nav" aria-label="Primary navigation">
+      <button data-nav="today" class="active"><span>●</span>Today</button>
+      <button data-nav="mission"><span>✓</span>Mission</button>
+      <button data-nav="materials"><span>♻</span>Materials</button>
+      <button data-nav="finish"><span>■</span>Finish</button>
+      <button data-nav="week"><span>▥</span>Week</button>
+    </nav>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <input type="file" id="importInput" accept="application/json" hidden />
+  <script src="app.js"></script>
+</body>
+</html>
