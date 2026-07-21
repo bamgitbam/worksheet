@@ -29,21 +29,27 @@
           </div>
 
           <div class="progress-wrap">
-            <div class="progress-label"><span>Mission progress</span><strong id="missionPercent">0%</strong></div>
+            <div class="progress-label"><span>Day plan progress</span><strong id="missionPercent">0%</strong></div>
             <div class="progress-track"><div class="progress-bar" id="missionBar"></div></div>
           </div>
 
           <div class="metric-grid">
-            <div><span>Target</span><strong>7h</strong></div>
+            <div><span>Target</span><strong>8h</strong></div>
             <div><span>Elapsed</span><strong id="elapsedTime">0h 00m</strong></div>
-            <div><span>Focus resets</span><strong id="focusCount">0</strong></div>
+            <div><span>Planned</span><strong id="plannedTime">0h 00m</strong></div>
             <div><span>XP</span><strong id="todayXp">0</strong></div>
           </div>
 
           <div class="mission-preview">
             <p class="label">MAIN MISSION</p>
             <h3 id="mainMissionText">Set today's mission</h3>
-            <p id="nextMoveText" class="muted">Add a few clear tasks so the day has a finish line.</p>
+            <p id="nextMoveText" class="muted">Build a few 30-minute or 1-hour work blocks.</p>
+          </div>
+
+          <div class="current-block" id="currentBlockCard">
+            <p class="label">NEXT BLOCK</p>
+            <strong id="currentBlockName">No work block planned</strong>
+            <span id="currentBlockTime" class="muted">Open Plan to build the day.</span>
           </div>
 
           <div class="button-row">
@@ -58,8 +64,8 @@
         </button>
 
         <div class="card">
-          <div class="section-head"><h3>Today's Tasks</h3><span id="taskSummary" class="muted">0 / 0</span></div>
-          <div id="todayTasks" class="task-list empty-state">No tasks yet.</div>
+          <div class="section-head"><h3>Today's Work Blocks</h3><span id="blockSummary" class="muted">0 / 0</span></div>
+          <div id="todayBlocks" class="block-list empty-state">No work blocks yet.</div>
         </div>
 
         <div class="card compact-grid">
@@ -70,29 +76,71 @@
         </div>
       </section>
 
-      <section class="screen" data-screen="mission">
+      <section class="screen" data-screen="plan">
         <div class="card">
-          <p class="muted">One minute in the morning. Give the day a clear finish line.</p>
-          <label>Main mission<input id="mainMissionInput" maxlength="120" placeholder="Example: Prep and first coat west elevation" /></label>
-          <label>Stretch goal<input id="stretchGoalInput" maxlength="120" placeholder="Optional: Begin south elevation" /></label>
-          <label>Difficulty
-            <select id="difficultyInput">
-              <option value="normal">Normal</option>
-              <option value="easy">Easy</option>
-              <option value="hard">Hard</option>
-              <option value="unknown">Unknown</option>
-            </select>
+          <p class="muted">Keep it simple: set the mission, then break the day into 30-minute or 1-hour blocks.</p>
+          <label>Day starts
+            <input id="dayStartInput" type="time" value="08:00" />
           </label>
-          <button class="primary full" id="saveMissionBtn">Save Mission</button>
+          <label>Main mission<input id="mainMissionInput" maxlength="120" placeholder="Example: Engineer project, check job, then production work" /></label>
+          <label>Stretch goal<input id="stretchGoalInput" maxlength="120" placeholder="Optional: Finish primer before cleanup" /></label>
+          <button class="primary full" id="saveMissionBtn">Save Day Plan</button>
         </div>
 
         <div class="card">
-          <div class="section-head"><h3>Task list</h3><button class="text-btn" id="clearCompletedBtn">Clear done</button></div>
+          <div class="section-head">
+            <div>
+              <h3>Work Blocks</h3>
+              <span id="planTotal" class="muted">0h 00m planned / 8h</span>
+            </div>
+            <button class="text-btn" id="clearDoneBlocksBtn">Clear done</button>
+          </div>
+
+          <form id="blockForm" class="block-form">
+            <label>Activity
+              <select id="activityInput">
+                <option>Paint</option>
+                <option>Prep</option>
+                <option>Bid</option>
+                <option>Engineer</option>
+                <option>Sand</option>
+                <option>Primer</option>
+                <option>Material Shop</option>
+                <option>Project Check</option>
+                <option>Travel</option>
+                <option>Cleanup</option>
+                <option>Break</option>
+                <option>Other</option>
+              </select>
+            </label>
+            <label>Length
+              <select id="durationInput">
+                <option value="30">30 minutes</option>
+                <option value="60" selected>1 hour</option>
+              </select>
+            </label>
+            <label class="wide">Note <span class="optional">optional</span>
+              <input id="blockNoteInput" maxlength="100" placeholder="Example: Engineer new mounting project" />
+            </label>
+            <button class="secondary full wide" type="submit">Add Work Block</button>
+          </form>
+
+          <div class="quick-add-row">
+            <button class="quick-btn" type="button" data-quick-activity="Break" data-quick-duration="30">+ 30m Break</button>
+            <button class="quick-btn" type="button" data-quick-activity="Travel" data-quick-duration="30">+ 30m Travel</button>
+            <button class="quick-btn" type="button" data-quick-activity="Cleanup" data-quick-duration="30">+ 30m Cleanup</button>
+          </div>
+
+          <div id="planBlocks" class="block-list empty-state">No work blocks yet.</div>
+        </div>
+
+        <div class="card">
+          <div class="section-head"><h3>Task Notes</h3><button class="text-btn" id="clearCompletedBtn">Clear done</button></div>
           <form id="taskForm" class="inline-form">
-            <input id="taskInput" maxlength="90" placeholder="Add a concrete task" required />
+            <input id="taskInput" maxlength="90" placeholder="Optional concrete task" required />
             <button class="secondary" type="submit">Add</button>
           </form>
-          <div id="missionTasks" class="task-list empty-state">No tasks yet.</div>
+          <div id="missionTasks" class="task-list empty-state">No task notes yet.</div>
         </div>
       </section>
 
@@ -160,24 +208,25 @@
 
       <section class="screen" data-screen="week">
         <div class="card">
-          <p class="eyebrow">JUL 21–24 · 7 HOURS / DAY</p>
+          <p class="eyebrow">JUL 21–24 · 8 HOURS / DAY</p>
           <h2>My Week</h2>
           <div class="metric-grid week-grid">
             <div><span>Days finished</span><strong id="weekDays">0 / 4</strong></div>
-            <div><span>Mission completion</span><strong id="weekCompletion">0%</strong></div>
+            <div><span>Blocks complete</span><strong id="weekCompletion">0%</strong></div>
             <div><span>Focus resets</span><strong id="weekFocus">0</strong></div>
             <div><span>Total XP</span><strong id="weekXp">0</strong></div>
           </div>
         </div>
+        <div id="weekActivityTotals" class="card"></div>
         <div id="weekDaysList" class="stack"></div>
         <div class="card">
           <h3>Friday review</h3>
           <p class="muted">The pilot succeeds only if it creates personal value.</p>
           <div class="review-prompts">
-            <p>Did having a visible mission change my pace?</p>
+            <p>Did having visible work blocks change my pace?</p>
             <p>Did the Back to Work reset reduce lost phone time?</p>
             <p>Did I notice material use differently?</p>
-            <p>Did I feel more engaged—or just more tracked?</p>
+            <p>Did breaks feel more intentional?</p>
             <p>Would I voluntarily use this again next week?</p>
           </div>
         </div>
@@ -186,7 +235,7 @@
 
     <nav class="bottom-nav" aria-label="Primary navigation">
       <button data-nav="today" class="active"><span>●</span>Today</button>
-      <button data-nav="mission"><span>✓</span>Mission</button>
+      <button data-nav="plan"><span>▤</span>Plan</button>
       <button data-nav="materials"><span>♻</span>Materials</button>
       <button data-nav="finish"><span>■</span>Finish</button>
       <button data-nav="week"><span>▥</span>Week</button>
@@ -194,7 +243,6 @@
   </div>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
-  <input type="file" id="importInput" accept="application/json" hidden />
   <script src="app.js"></script>
 </body>
 </html>

@@ -1,37 +1,31 @@
-# Solo Productivity Pilot v0.1
+# Solo Productivity Pilot v0.2
 
-A private, single-user experiment for testing whether visible goals, focus resets, material awareness, progress, and lightweight game mechanics improve a physical workday.
+A private, mobile-first one-person productivity experiment for July 21–24, 2026.
 
-## Pilot window
+## Pilot rules
 
-- Tuesday, July 21, 2026 through Friday, July 24, 2026
-- 7 target work hours per day
-- Solo use only
+- Solo use only.
+- 8-hour target day.
+- Default schedule starts at 8:00 AM.
+- Plan work in simple 30-minute or 1-hour blocks.
+- Activity types: Paint, Prep, Bid, Engineer, Sand, Primer, Material Shop, Project Check, Travel, Cleanup, Break, and Other.
+- Use **Back to Work** as a deliberate focus reset, not a penalty.
+- Track materials and end-of-day reflection without over-measuring.
 
-## Run locally
+## Files
 
-Open `index.html` in a browser.
+- `index.html`
+- `app.css`
+- `app.js`
 
-For GitHub Pages, publish the folder contents at the repository root.
+## Storage
 
-## Data
+Data is stored locally in the browser with `localStorage`.
 
-All data stays in browser `localStorage` under:
+The export button in the upper-right downloads a JSON backup.
 
-`solo-productivity-pilot-v1`
+The v0.2 build attempts to preserve/migrate data from the original v0.1 browser storage key.
 
-Use the download icon in the top right to export a JSON backup.
+## GitHub Pages
 
-## Screens
-
-- Today
-- Mission
-- Materials
-- Finish Day
-- My Week
-
-## Pilot rule
-
-Do not optimize the app for management reporting during this test. Optimize for one question:
-
-> Does this make the user voluntarily work with more focus, awareness, and satisfaction?
+For the existing `bamgitbam/worksheet` repository, replace the three app files in the repository root and push to `main`. GitHub Pages will redeploy automatically.
