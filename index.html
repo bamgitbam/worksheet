@@ -131,6 +131,19 @@
           </div>
         </div>
 
+        <details class="card improvement-notes-card">
+          <summary>
+            <span>App Improvement Notes</span>
+            <span class="muted" id="improvementNoteCount">0 saved</span>
+          </summary>
+          <p class="muted">Capture the thought and keep working. These are ideas to review after the pilot, not changes we need to make today.</p>
+          <label>Quick note
+            <textarea id="improvementNoteInput" rows="3" maxlength="400" placeholder="Example: I wanted one-tap switching from Engineer directly to Travel."></textarea>
+          </label>
+          <button class="secondary full" id="saveImprovementNoteBtn">Save Improvement Note</button>
+          <div id="recentImprovementNotes" class="improvement-note-list empty-state">No app notes yet.</div>
+        </details>
+
         <div class="card">
           <div class="section-head"><h3>Today's Timeline</h3><span id="timelineSummary" class="muted">Nothing logged yet</span></div>
           <div id="todayTimeline" class="timeline empty-state">Start an activity or log a quick win.</div>
@@ -281,6 +294,11 @@
         </div>
         <div id="weekActivityTotals" class="card"></div>
         <div id="weekDaysList" class="stack"></div>
+        <div class="card">
+          <div class="section-head"><h3>App Improvement Notes</h3><span class="muted" id="weekImprovementNoteCount">0 saved</span></div>
+          <p class="muted">Parking lot for friction, ideas, bugs, and things worth reconsidering after Friday.</p>
+          <div id="weekImprovementNotes" class="improvement-note-list empty-state">No app notes yet.</div>
+        </div>
         <div class="card">
           <h3>Friday review</h3>
           <p class="muted">The pilot succeeds only if it creates personal value.</p>

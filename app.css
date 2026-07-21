@@ -148,3 +148,35 @@ input:focus, select:focus, textarea:focus { border-color: rgba(98,168,255,.8); b
   .timeline-item { grid-template-columns: 54px 1fr auto; padding: 10px; }
   .running-timer { font-size: 1.9rem; }
 }
+
+
+/* v0.4 — private app-improvement parking lot */
+.improvement-notes-card summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  cursor: pointer;
+  font-weight: 800;
+  list-style: none;
+}
+.improvement-notes-card summary::-webkit-details-marker { display: none; }
+.improvement-notes-card summary::after {
+  content: '+';
+  font-size: 1.25rem;
+  line-height: 1;
+  color: var(--muted);
+}
+.improvement-notes-card[open] summary::after { content: '−'; }
+.improvement-notes-card[open] summary { margin-bottom: 14px; }
+.improvement-note-list { margin-top: 14px; display: grid; gap: 10px; }
+.improvement-note-item {
+  position: relative;
+  padding: 12px 38px 12px 12px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: rgba(255,255,255,.025);
+}
+.improvement-note-item p { margin: 5px 0 0; white-space: pre-wrap; }
+.improvement-note-meta { color: var(--muted); font-size: .76rem; }
+.improvement-note-item .small-delete { position: absolute; right: 8px; top: 8px; }

@@ -1,4 +1,4 @@
-# Solo Productivity Pilot v0.3
+# Solo Productivity Pilot v0.4
 
 Private four-day self-experiment for July 21–24, 2026.
 
@@ -31,9 +31,17 @@ Paint, Prep, Bid, Engineer, Sand, Primer, Material Shop, Project Check, Travel, 
 - JSON backup export.
 - Browser localStorage only; no accounts or database.
 
-## v0.3 corrections
+## v0.4 corrections
 
 - Prevents an empty day from earning Craft XP.
 - Finish Day is disabled while an activity is running or before any real work is logged.
 - Adds Reopen Day.
 - Migrates v0.2 data and automatically clears the known accidental empty sub-five-minute finish pattern.
+
+
+## v0.4 addition
+
+- App Improvement Notes parking lot for private pilot feedback
+- Timestamped notes persist in local storage and export with the pilot backup
+- Notes do not affect XP, timers, or daily scoring
+- Recent notes are available from Today; the full list appears in My Week

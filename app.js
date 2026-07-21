@@ -1,12 +1,12 @@
 const PILOT = {
-  version: 3,
+  version: 4,
   name: 'Solo Productivity Pilot',
   startDate: '2026-07-21',
   endDate: '2026-07-24',
   targetHoursPerDay: 8,
-  storageKey: 'solo-productivity-pilot-v3',
-  previousStorageKey: 'solo-productivity-pilot-v2',
-  legacyStorageKey: 'solo-productivity-pilot-v1'
+  storageKey: 'solo-productivity-pilot-v4',
+  previousStorageKey: 'solo-productivity-pilot-v3',
+  legacyStorageKey: 'solo-productivity-pilot-v2'
 };
 
 const PILOT_DATES = ['2026-07-21', '2026-07-22', '2026-07-23', '2026-07-24'];
@@ -72,7 +72,12 @@ function migrateState(saved) {
       day.xp = { momentum: 0, craft: 0, stewardship: 0, focus: 0, total: 0 };
     }
   });
-  return { version: PILOT.version, pilot: PILOT, days };
+  return {
+    version: PILOT.version,
+    pilot: PILOT,
+    days,
+    improvementNotes: Array.isArray(saved?.improvementNotes) ? saved.improvementNotes : []
+  };
 }
 
 function loadState() {
@@ -88,7 +93,7 @@ function loadState() {
   } catch (err) {
     console.warn('Could not load saved pilot state', err);
   }
-  return { version: PILOT.version, pilot: PILOT, days: PILOT_DATES.map(defaultDay) };
+  return { version: PILOT.version, pilot: PILOT, days: PILOT_DATES.map(defaultDay), improvementNotes: [] };
 }
 
 let state = loadState();
@@ -328,6 +333,29 @@ function activityTotals(days) {
   return totals;
 }
 
+function renderImprovementNotes() {
+  if (!Array.isArray(state.improvementNotes)) state.improvementNotes = [];
+  const notes = [...state.improvementNotes].sort((a, b) => new Date(b.at) - new Date(a.at));
+  const countLabel = `${notes.length} saved`;
+  $('improvementNoteCount').textContent = countLabel;
+  $('weekImprovementNoteCount').textContent = countLabel;
+
+  const noteMarkup = note => `<div class="improvement-note-item">
+    <div class="improvement-note-meta">${fmtDate(note.dayDate || getActiveDate())} · ${fmtClock(note.at)}</div>
+    <p>${escapeHtml(note.text)}</p>
+    <button class="delete-btn small-delete" data-improvement-delete="${note.id}" aria-label="Delete improvement note">×</button>
+  </div>`;
+
+  const recent = notes.slice(0, 5);
+  const recentEl = $('recentImprovementNotes');
+  recentEl.className = recent.length ? 'improvement-note-list' : 'improvement-note-list empty-state';
+  recentEl.innerHTML = recent.length ? recent.map(noteMarkup).join('') : 'No app notes yet.';
+
+  const weekEl = $('weekImprovementNotes');
+  weekEl.className = notes.length ? 'improvement-note-list' : 'improvement-note-list empty-state';
+  weekEl.innerHTML = notes.length ? notes.map(noteMarkup).join('') : 'No app notes yet.';
+}
+
 function renderWeek() {
   const pilotDays = state.days.filter(day => day.date >= PILOT.startDate && day.date <= PILOT.endDate).sort((a, b) => a.date.localeCompare(b.date));
   const finished = pilotDays.filter(day => day.finished);
@@ -459,6 +487,7 @@ function render() {
   const preview = calcXp(previewDay);
   $('scorePreview').innerHTML = `<strong>Projected XP: ${preview.total}</strong><br><span class="muted">Momentum ${preview.momentum} · Craft ${preview.craft} · Stewardship ${preview.stewardship} · Focus ${preview.focus}</span>`;
 
+  renderImprovementNotes();
   renderWeek();
 }
 
@@ -565,6 +594,22 @@ $('saveAccomplishmentBtn').addEventListener('click', () => {
   render();
 });
 
+$('saveImprovementNoteBtn').addEventListener('click', () => {
+  const text = $('improvementNoteInput').value.trim();
+  if (!text) return;
+  if (!Array.isArray(state.improvementNotes)) state.improvementNotes = [];
+  state.improvementNotes.push({
+    id: uid(),
+    text,
+    at: new Date().toISOString(),
+    dayDate: getDay().date
+  });
+  $('improvementNoteInput').value = '';
+  saveState();
+  toast('Improvement note saved for Friday review.');
+  render();
+});
+
 $('reviewDayBtn').addEventListener('click', () => navigate('finish'));
 
 $('saveMissionBtn').addEventListener('click', () => {
@@ -612,6 +657,7 @@ document.addEventListener('click', event => {
   const taskDelete = event.target.closest('[data-task-delete]');
   const sessionDelete = event.target.closest('[data-session-delete]');
   const winDelete = event.target.closest('[data-win-delete]');
+  const improvementDelete = event.target.closest('[data-improvement-delete]');
 
   if (blockToggle) {
     const block = getDay().workBlocks.find(item => item.id === blockToggle.dataset.blockToggle);
@@ -625,8 +671,9 @@ document.addEventListener('click', event => {
   if (taskDelete) getDay().tasks = getDay().tasks.filter(item => item.id !== taskDelete.dataset.taskDelete);
   if (sessionDelete) getDay().sessions = getDay().sessions.filter(item => item.id !== sessionDelete.dataset.sessionDelete);
   if (winDelete) getDay().accomplishments = getDay().accomplishments.filter(item => item.id !== winDelete.dataset.winDelete);
+  if (improvementDelete) state.improvementNotes = state.improvementNotes.filter(item => item.id !== improvementDelete.dataset.improvementDelete);
 
-  if (blockToggle || blockDelete || taskToggle || taskDelete || sessionDelete || winDelete) {
+  if (blockToggle || blockDelete || taskToggle || taskDelete || sessionDelete || winDelete || improvementDelete) {
     saveState();
     render();
   }
