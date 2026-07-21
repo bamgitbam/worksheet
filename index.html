@@ -28,44 +28,117 @@
             <div class="status-pill" id="dayStatus">READY</div>
           </div>
 
-          <div class="progress-wrap">
-            <div class="progress-label"><span>Day plan progress</span><strong id="missionPercent">0%</strong></div>
-            <div class="progress-track"><div class="progress-bar" id="missionBar"></div></div>
-          </div>
-
           <div class="metric-grid">
             <div><span>Target</span><strong>8h</strong></div>
-            <div><span>Elapsed</span><strong id="elapsedTime">0h 00m</strong></div>
-            <div><span>Planned</span><strong id="plannedTime">0h 00m</strong></div>
+            <div><span>Day elapsed</span><strong id="elapsedTime">0h 00m</strong></div>
+            <div><span>Work logged</span><strong id="loggedWorkTime">0h 00m</strong></div>
             <div><span>XP</span><strong id="todayXp">0</strong></div>
           </div>
 
           <div class="mission-preview">
             <p class="label">MAIN MISSION</p>
             <h3 id="mainMissionText">Set today's mission</h3>
-            <p id="nextMoveText" class="muted">Build a few 30-minute or 1-hour work blocks.</p>
+            <p id="nextMoveText" class="muted">Start the day, then log what you actually do.</p>
           </div>
 
-          <div class="current-block" id="currentBlockCard">
-            <p class="label">NEXT BLOCK</p>
-            <strong id="currentBlockName">No work block planned</strong>
-            <span id="currentBlockTime" class="muted">Open Plan to build the day.</span>
+          <button class="primary full start-day-button" id="startDayBtn">Start Day</button>
+        </div>
+
+        <div class="card activity-card" id="activityCard">
+          <div class="section-head">
+            <div>
+              <p class="label">RIGHT NOW</p>
+              <h3 id="activityStateTitle">Nothing running</h3>
+            </div>
+            <span class="live-dot hidden" id="liveDot">LIVE</span>
           </div>
 
-          <div class="button-row">
-            <button class="primary" id="startDayBtn">Start Day</button>
-            <button class="secondary" id="finishShortcutBtn">Finish Day</button>
+          <div id="idleActivityPanel">
+            <p class="muted">What are you doing now? Start it when you actually begin.</p>
+            <div class="activity-start-grid">
+              <label>Activity
+                <select id="liveActivityInput">
+                  <option>Paint</option>
+                  <option>Prep</option>
+                  <option>Bid</option>
+                  <option>Engineer</option>
+                  <option>Sand</option>
+                  <option>Primer</option>
+                  <option>Material Shop</option>
+                  <option>Project Check</option>
+                  <option>Travel</option>
+                  <option>Cleanup</option>
+                  <option>Break</option>
+                  <option>Other</option>
+                </select>
+              </label>
+              <label>What are you starting? <span class="optional">optional</span>
+                <input id="liveActivityNote" maxlength="120" placeholder="Example: Engineer new project concept" />
+              </label>
+            </div>
+            <div class="button-row activity-actions">
+              <button class="primary" id="startActivityBtn">Start Activity</button>
+              <button class="secondary" id="quickBreakBtn">Start Break</button>
+            </div>
+          </div>
+
+          <div id="runningActivityPanel" class="hidden">
+            <div class="running-activity">
+              <strong id="runningActivityName">Engineer</strong>
+              <span class="running-timer" id="runningActivityTimer">00:00:00</span>
+              <p class="muted" id="runningActivityNote"></p>
+              <p class="started-at" id="runningActivityStarted"></p>
+            </div>
+            <div class="button-row activity-actions">
+              <button class="stop-btn" id="openStopActivityBtn">Stop & Log</button>
+              <button class="secondary" id="focusResetBtn">Back to Work</button>
+            </div>
+          </div>
+
+          <div id="stopActivityPanel" class="stop-panel hidden">
+            <p class="label">CLOSE THIS ACTIVITY</p>
+            <label>What happened?
+              <select id="activityOutcomeInput">
+                <option value="done">Did what I intended</option>
+                <option value="progress">Made good progress</option>
+                <option value="switch">Switching to something else</option>
+                <option value="blocked">Got blocked / interrupted</option>
+              </select>
+            </label>
+            <label>What did you do? <span class="optional">recommended</span>
+              <textarea id="activityResultInput" rows="3" maxlength="240" placeholder="Example: Sketched the frame, measured clearances, and made the material list."></textarea>
+            </label>
+            <div class="button-row">
+              <button class="primary" id="saveStopActivityBtn">Save & Stop</button>
+              <button class="secondary" id="cancelStopActivityBtn">Keep Working</button>
+            </div>
           </div>
         </div>
 
-        <button class="focus-button" id="focusResetBtn">
-          <span class="focus-main">BACK TO WORK</span>
-          <span class="focus-sub">Catch the distraction. Reset the run.</span>
+        <button class="did-something-button" id="didSomethingBtn">
+          <span class="focus-main">I DID SOMETHING</span>
+          <span class="focus-sub">Log a quick win without stopping the timer.</span>
         </button>
 
+        <div class="card hidden" id="accomplishmentPanel">
+          <p class="label">QUICK WIN</p>
+          <label>What did you get done?
+            <input id="accomplishmentInput" maxlength="180" placeholder="Example: Solved the bracket clearance problem" />
+          </label>
+          <div class="button-row">
+            <button class="primary" id="saveAccomplishmentBtn">Log It</button>
+            <button class="secondary" id="cancelAccomplishmentBtn">Cancel</button>
+          </div>
+        </div>
+
         <div class="card">
-          <div class="section-head"><h3>Today's Work Blocks</h3><span id="blockSummary" class="muted">0 / 0</span></div>
-          <div id="todayBlocks" class="block-list empty-state">No work blocks yet.</div>
+          <div class="section-head"><h3>Today's Timeline</h3><span id="timelineSummary" class="muted">Nothing logged yet</span></div>
+          <div id="todayTimeline" class="timeline empty-state">Start an activity or log a quick win.</div>
+        </div>
+
+        <div class="card">
+          <div class="section-head"><h3>Today's Plan</h3><span id="blockSummary" class="muted">0 / 0</span></div>
+          <div id="todayBlocks" class="block-list empty-state">No planned blocks yet. Planning is optional.</div>
         </div>
 
         <div class="card compact-grid">
@@ -74,11 +147,13 @@
           <div><span class="label">Stewardship</span><strong id="stewardshipLabel">Unrated</strong></div>
           <div><span class="label">Focus</span><strong id="focusLabel">Fresh start</strong></div>
         </div>
+
+        <button class="secondary full end-day-link" id="reviewDayBtn">Review & End Day</button>
       </section>
 
       <section class="screen" data-screen="plan">
         <div class="card">
-          <p class="muted">Keep it simple: set the mission, then break the day into 30-minute or 1-hour blocks.</p>
+          <p class="muted">The plan is a guide, not the time record. Actual work is captured with Start Activity and Stop & Log.</p>
           <label>Day starts
             <input id="dayStartInput" type="time" value="08:00" />
           </label>
@@ -90,7 +165,7 @@
         <div class="card">
           <div class="section-head">
             <div>
-              <h3>Work Blocks</h3>
+              <h3>Planned Work Blocks</h3>
               <span id="planTotal" class="muted">0h 00m planned / 8h</span>
             </div>
             <button class="text-btn" id="clearDoneBlocksBtn">Clear done</button>
@@ -99,18 +174,9 @@
           <form id="blockForm" class="block-form">
             <label>Activity
               <select id="activityInput">
-                <option>Paint</option>
-                <option>Prep</option>
-                <option>Bid</option>
-                <option>Engineer</option>
-                <option>Sand</option>
-                <option>Primer</option>
-                <option>Material Shop</option>
-                <option>Project Check</option>
-                <option>Travel</option>
-                <option>Cleanup</option>
-                <option>Break</option>
-                <option>Other</option>
+                <option>Paint</option><option>Prep</option><option>Bid</option><option>Engineer</option>
+                <option>Sand</option><option>Primer</option><option>Material Shop</option><option>Project Check</option>
+                <option>Travel</option><option>Cleanup</option><option>Break</option><option>Other</option>
               </select>
             </label>
             <label>Length
@@ -122,7 +188,7 @@
             <label class="wide">Note <span class="optional">optional</span>
               <input id="blockNoteInput" maxlength="100" placeholder="Example: Engineer new mounting project" />
             </label>
-            <button class="secondary full wide" type="submit">Add Work Block</button>
+            <button class="secondary full wide" type="submit">Add Planned Block</button>
           </form>
 
           <div class="quick-add-row">
@@ -131,7 +197,7 @@
             <button class="quick-btn" type="button" data-quick-activity="Cleanup" data-quick-duration="30">+ 30m Cleanup</button>
           </div>
 
-          <div id="planBlocks" class="block-list empty-state">No work blocks yet.</div>
+          <div id="planBlocks" class="block-list empty-state">No planned blocks yet.</div>
         </div>
 
         <div class="card">
@@ -156,9 +222,7 @@
             <label>Unit<input id="materialUnit" placeholder="gal, tubes, pieces" /></label>
             <label>Waste
               <select id="materialWaste">
-                <option value="none">None</option>
-                <option value="minor">Minor</option>
-                <option value="significant">Significant</option>
+                <option value="none">None</option><option value="minor">Minor</option><option value="significant">Significant</option>
               </select>
             </label>
             <button class="primary full" type="submit">Add Material Check</button>
@@ -169,8 +233,10 @@
 
       <section class="screen" data-screen="finish">
         <div class="card">
-          <h3>Finish the run</h3>
-          <p class="muted">Two minutes. Capture the day honestly.</p>
+          <h3>Review the day</h3>
+          <p class="muted" id="finishGateMessage">Stop any running activity first. Then close the day honestly.</p>
+
+          <div class="finish-summary" id="finishSummary"></div>
 
           <label>Quality / rework
             <select id="qualityInput">
@@ -182,19 +248,14 @@
 
           <label>How did I perform?
             <select id="performanceInput">
-              <option value="better">Better than normal</option>
-              <option value="normal" selected>Normal</option>
-              <option value="below">Below my normal ability</option>
+              <option value="better">Better than normal</option><option value="normal" selected>Normal</option><option value="below">Below my normal ability</option>
             </select>
           </label>
 
           <label>How did work feel?
             <select id="feelingInput">
-              <option value="energizing">Energizing</option>
-              <option value="good">Good</option>
-              <option value="neutral" selected>Neutral</option>
-              <option value="frustrating">Frustrating</option>
-              <option value="exhausting">Exhausting</option>
+              <option value="energizing">Energizing</option><option value="good">Good</option><option value="neutral" selected>Neutral</option>
+              <option value="frustrating">Frustrating</option><option value="exhausting">Exhausting</option>
             </select>
           </label>
 
@@ -202,7 +263,8 @@
           <label>Notes<textarea id="notesInput" rows="3" placeholder="What changed my pace or focus today?"></textarea></label>
 
           <div class="score-preview" id="scorePreview"></div>
-          <button class="primary full" id="finishDayBtn">Finish Run</button>
+          <button class="primary full" id="finishDayBtn">Finish Day</button>
+          <button class="secondary full hidden" id="reopenDayBtn">Reopen Day</button>
         </div>
       </section>
 
@@ -212,7 +274,7 @@
           <h2>My Week</h2>
           <div class="metric-grid week-grid">
             <div><span>Days finished</span><strong id="weekDays">0 / 4</strong></div>
-            <div><span>Blocks complete</span><strong id="weekCompletion">0%</strong></div>
+            <div><span>Work logged</span><strong id="weekLogged">0h 00m</strong></div>
             <div><span>Focus resets</span><strong id="weekFocus">0</strong></div>
             <div><span>Total XP</span><strong id="weekXp">0</strong></div>
           </div>
@@ -223,10 +285,10 @@
           <h3>Friday review</h3>
           <p class="muted">The pilot succeeds only if it creates personal value.</p>
           <div class="review-prompts">
-            <p>Did having visible work blocks change my pace?</p>
+            <p>Did starting and stopping activities make me more aware of where time went?</p>
+            <p>Did logging what I actually accomplished make work feel more concrete?</p>
             <p>Did the Back to Work reset reduce lost phone time?</p>
             <p>Did I notice material use differently?</p>
-            <p>Did breaks feel more intentional?</p>
             <p>Would I voluntarily use this again next week?</p>
           </div>
         </div>

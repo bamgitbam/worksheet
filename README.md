@@ -1,31 +1,39 @@
-# Solo Productivity Pilot v0.2
+# Solo Productivity Pilot v0.3
 
-A private, mobile-first one-person productivity experiment for July 21–24, 2026.
+Private four-day self-experiment for July 21–24, 2026.
 
-## Pilot rules
+## Core idea
 
-- Solo use only.
+The plan is only a guide. Actual work is recorded with a simple loop:
+
+1. Start Day.
+2. Start Activity when real work begins.
+3. Stop & Log when the activity changes or ends.
+4. Record what actually happened.
+5. Use I Did Something for quick accomplishments without stopping a running activity.
+6. Review & End Day only after real work has been logged.
+
+## Activity types
+
+Paint, Prep, Bid, Engineer, Sand, Primer, Material Shop, Project Check, Travel, Cleanup, Break, and Other.
+
+## Pilot features
+
 - 8-hour target day.
-- Default schedule starts at 8:00 AM.
-- Plan work in simple 30-minute or 1-hour blocks.
-- Activity types: Paint, Prep, Bid, Engineer, Sand, Primer, Material Shop, Project Check, Travel, Cleanup, Break, and Other.
-- Use **Back to Work** as a deliberate focus reset, not a penalty.
-- Track materials and end-of-day reflection without over-measuring.
+- Actual start/stop activity sessions with timestamps and running timer.
+- Breaks tracked as real sessions.
+- Optional 30-minute / 1-hour planned blocks.
+- Quick accomplishment log: I Did Something.
+- Back to Work focus resets.
+- Materials and waste awareness.
+- Daily closeout and private XP.
+- Actual weekly time breakdown by activity.
+- JSON backup export.
+- Browser localStorage only; no accounts or database.
 
-## Files
+## v0.3 corrections
 
-- `index.html`
-- `app.css`
-- `app.js`
-
-## Storage
-
-Data is stored locally in the browser with `localStorage`.
-
-The export button in the upper-right downloads a JSON backup.
-
-The v0.2 build attempts to preserve/migrate data from the original v0.1 browser storage key.
-
-## GitHub Pages
-
-For the existing `bamgitbam/worksheet` repository, replace the three app files in the repository root and push to `main`. GitHub Pages will redeploy automatically.
+- Prevents an empty day from earning Craft XP.
+- Finish Day is disabled while an activity is running or before any real work is logged.
+- Adds Reopen Day.
+- Migrates v0.2 data and automatically clears the known accidental empty sub-five-minute finish pattern.
